@@ -44,7 +44,7 @@ export default function DashboardPage() {
       try {
         const pdfjs = await import('pdfjs-dist');
         // Use a stable CDN link with the library's version to ensure compatibility.
-        pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+        pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.mjs`;
 
         setProgress(30);
         const typedarray = new Uint8Array(event.target.result as ArrayBuffer);
