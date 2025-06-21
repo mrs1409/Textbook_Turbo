@@ -28,16 +28,23 @@ export default function DashboardPage() {
     setResults(null);
     setProgress(10);
 
-    try {
-      const pdfjs = await import('pdfjs-dist');
-      pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-
-      const fileReader = new FileReader();
-      fileReader.readAsArrayBuffer(file);
-      fileReader.onload = async (event) => {
-        if (!event.target?.result) {
-          throw new Error('Failed to read file.');
-        }
+    const fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(file);
+    
+    fileReader.onload = async (event) => {
+      if (!event.target?.result) {
+        const err = new Error('Failed to read file.');
+        setError(err.message);
+        toast({ title: 'Error', description: err.message, variant: 'destructive' });
+        setIsLoading(false);
+        setProgress(0);
+        return;
+      }
+      
+      try {
+        const pdfjs = await import('pdfjs-dist');
+        // Use a stable CDN link with the library's version to ensure compatibility.
+        pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
         setProgress(30);
         const typedarray = new Uint8Array(event.target.result as ArrayBuffer);
@@ -54,19 +61,28 @@ export default function DashboardPage() {
         const aiResults = await processPdf(pdfText);
         setProgress(100);
         setResults(aiResults);
-      };
-    } catch (e: any) {
-      console.error(e);
-      const errorMessage = e.message || 'An unexpected error occurred.';
-      setError(errorMessage);
-      toast({
-        title: 'Error',
-        description: errorMessage,
-        variant: 'destructive',
-      });
-    } finally {
+
+      } catch (e: any) {
+        console.error(e);
+        const errorMessage = e.message || 'An unexpected error occurred while processing the document.';
+        setError(errorMessage);
+        toast({
+          title: 'Error',
+          description: errorMessage,
+          variant: 'destructive',
+        });
+      } finally {
+        setIsLoading(false);
+        setTimeout(() => setProgress(0), 1000);
+      }
+    };
+
+    fileReader.onerror = () => {
+      const err = new Error('There was an issue reading the file.');
+      setError(err.message);
+      toast({ title: 'Error', description: err.message, variant: 'destructive' });
       setIsLoading(false);
-      setTimeout(() => setProgress(0), 1000);
+      setProgress(0);
     }
   };
   
