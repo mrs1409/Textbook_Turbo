@@ -17,7 +17,7 @@ const FindRelevantVideosInputSchema = z.object({
 export type FindRelevantVideosInput = z.infer<typeof FindRelevantVideosInputSchema>;
 
 const FindRelevantVideosOutputSchema = z.object({
-  videoUrls: z.array(z.string().url()).length(5).describe('A list of 5 relevant YouTube video URLs.'),
+  videoUrls: z.array(z.string().url()).min(3).max(5).describe('A list of 3-5 relevant YouTube video URLs.'),
 });
 export type FindRelevantVideosOutput = z.infer<typeof FindRelevantVideosOutputSchema>;
 
@@ -31,7 +31,7 @@ const prompt = ai.definePrompt({
   output: {schema: FindRelevantVideosOutputSchema},
   prompt: `You are an AI assistant designed to find relevant YouTube videos for students.
 
-  Given the content of a textbook, you will identify and return a list of 5 YouTube video URLs that are most relevant to the content.
+  Given the content of a textbook, you will identify and return a list of 3 to 5 YouTube video URLs that are most relevant to the content.
 
   Textbook Content: {{{textbookContent}}}
 

@@ -19,8 +19,9 @@ export type FindRelevantLinksInput = z.infer<typeof FindRelevantLinksInputSchema
 const FindRelevantLinksOutputSchema = z.object({
   relevantLinks: z
     .array(z.string().url())
-    .length(5)
-    .describe('A list of 5 reputable external website URLs for deeper reading.'),
+    .min(3)
+    .max(5)
+    .describe('A list of 3-5 reputable external website URLs for deeper reading.'),
 });
 export type FindRelevantLinksOutput = z.infer<typeof FindRelevantLinksOutputSchema>;
 
@@ -33,7 +34,7 @@ const prompt = ai.definePrompt({
   input: {schema: FindRelevantLinksInputSchema},
   output: {schema: FindRelevantLinksOutputSchema},
   prompt: `You are an AI assistant helping students learn from textbooks.
-  Given the following textbook content, find 5 reputable external website URLs that would be helpful for a student to explore the topics in more detail and broaden their understanding.
+  Given the following textbook content, find 3 to 5 reputable external website URLs that would be helpful for a student to explore the topics in more detail and broaden their understanding.
   Return a JSON array of the URLs.
 
   Textbook Content: {{{textbookContent}}}
