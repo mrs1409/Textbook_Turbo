@@ -18,10 +18,10 @@ export type FindRelevantLinksInput = z.infer<typeof FindRelevantLinksInputSchema
 
 const FindRelevantLinksOutputSchema = z.object({
   relevantLinks: z
-    .array(z.string().url())
+    .array(z.string())
     .min(3)
     .max(5)
-    .describe('A list of 3-5 reputable external website URLs for deeper reading.'),
+    .describe('A list of 3-5 reputable external website URLs for deeper reading. Each URL should be a string.'),
 });
 export type FindRelevantLinksOutput = z.infer<typeof FindRelevantLinksOutputSchema>;
 
