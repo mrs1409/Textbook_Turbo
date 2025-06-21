@@ -18,7 +18,9 @@ export type SummarizePdfInput = z.infer<typeof SummarizePdfInputSchema>;
 
 const SummarizePdfOutputSchema = z.object({
   summary: z
-    .string()
+    .array(z.string())
+    .min(5)
+    .max(8)
     .describe('A concise 5-8 bullet point summary of the PDF content.'),
   webLinks: z
     .array(z.string().url())
@@ -43,7 +45,7 @@ const summarizePdfPrompt = ai.definePrompt({
 
   Please provide the following information based on the provided textbook content:
 
-  1.  A concise 5-8 bullet point summary of the PDF content, written in simple, student-friendly language.
+  1.  A concise 5-8 bullet point summary of the PDF content, written in simple, student-friendly language. This should be a JSON array of strings.
   2.  A list of 5 reputable external site URLs for deeper reading on the topics covered in the textbook.
   3.  A list of 5 relevant YouTube video URLs that explain the concepts discussed in the textbook.
 

@@ -4,12 +4,10 @@ import { FileText } from 'lucide-react';
 
 interface SummaryCardProps {
   isLoading: boolean;
-  summary?: string;
+  summary?: string[];
 }
 
 export function SummaryCard({ isLoading, summary }: SummaryCardProps) {
-  const summaryPoints = summary?.split('\n').filter(p => p.trim().length > 0 && (p.trim().startsWith('*') || p.trim().startsWith('-')));
-
   return (
     <Card className="h-full transition-all duration-300 hover:shadow-lg animate-in fade-in-50 slide-in-from-bottom-5">
       <CardHeader>
@@ -28,10 +26,10 @@ export function SummaryCard({ isLoading, summary }: SummaryCardProps) {
               </div>
             ))}
           </div>
-        ) : summaryPoints && summaryPoints.length > 0 ? (
+        ) : summary && summary.length > 0 ? (
           <ul className="space-y-3 text-sm list-disc list-inside text-foreground/90">
-            {summaryPoints.map((point, index) => (
-              <li key={index} className="leading-relaxed">{point.substring(1).trim()}</li>
+            {summary.map((point, index) => (
+              <li key={index} className="leading-relaxed">{point}</li>
             ))}
           </ul>
         ) : (
