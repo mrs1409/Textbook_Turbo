@@ -57,6 +57,11 @@ export default function DashboardPage() {
           pdfText += textContent.items.map(item => ('str' in item ? item.str : '')).join(' ');
         }
         
+        const maxTextLength = 15000;
+        if (pdfText.length > maxTextLength) {
+          pdfText = pdfText.substring(0, maxTextLength);
+        }
+        
         setProgress(50);
         const aiResults = await processPdf(pdfText);
         setProgress(100);
