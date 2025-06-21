@@ -1,9 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import * as pdfjs from 'pdfjs-dist';
 import { useToast } from '@/hooks/use-toast';
-import { type SummarizePdfOutput } from '@/ai/flows/summarize-pdf';
+import { type ProcessedPdfOutput } from './actions';
 import { processPdf } from './actions';
 import Link from 'next/link';
 import { Icons } from '@/components/icons';
@@ -16,15 +15,10 @@ import { SummaryCard } from '@/components/dashboard/summary-card';
 import { LinksCard } from '@/components/dashboard/links-card';
 import { VideosCard } from '@/components/dashboard/videos-card';
 
-// Configure PDF.js worker
-if (typeof window !== 'undefined') {
-  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-}
-
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [results, setResults] = useState<SummarizePdfOutput | null>(null);
+  const [results, setResults] = useState<ProcessedPdfOutput | null>(null);
   const [progress, setProgress] = useState(0);
   const { toast } = useToast();
 
@@ -35,6 +29,9 @@ export default function DashboardPage() {
     setProgress(10);
 
     try {
+      const pdfjs = await import('pdfjs-dist');
+      pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+
       const fileReader = new FileReader();
       fileReader.readAsArrayBuffer(file);
       fileReader.onload = async (event) => {
