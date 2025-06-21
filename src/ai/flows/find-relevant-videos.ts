@@ -17,7 +17,7 @@ const FindRelevantVideosInputSchema = z.object({
 export type FindRelevantVideosInput = z.infer<typeof FindRelevantVideosInputSchema>;
 
 const FindRelevantVideosOutputSchema = z.object({
-  videoUrls: z.array(z.string().url()).describe('A list of 5 relevant YouTube video URLs.'),
+  videoUrls: z.array(z.string().url()).length(5).describe('A list of 5 relevant YouTube video URLs.'),
 });
 export type FindRelevantVideosOutput = z.infer<typeof FindRelevantVideosOutputSchema>;
 

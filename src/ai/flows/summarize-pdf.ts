@@ -21,10 +21,12 @@ const SummarizePdfOutputSchema = z.object({
     .string()
     .describe('A concise 5-8 bullet point summary of the PDF content.'),
   webLinks: z
-    .array(z.string())
+    .array(z.string().url())
+    .length(5)
     .describe('A list of 5 reputable external site URLs for deeper reading.'),
   videoLinks: z
-    .array(z.string())
+    .array(z.string().url())
+    .length(5)
     .describe('A list of 5 relevant YouTube video URLs.'),
 });
 export type SummarizePdfOutput = z.infer<typeof SummarizePdfOutputSchema>;
